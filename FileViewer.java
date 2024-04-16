@@ -3,7 +3,7 @@
 // Project: Senior Project
 // File Name: FileViewer.java
 // Professor: Dr. Theresa Wilson
-// Latest Update Date: 04/05/2024
+// Latest Update Date: 04/16/2024
 
 // What to change to use on your own computer:
 // destinationFolder :: line 55
@@ -53,7 +53,7 @@ public class FileViewer extends JFrame {
         // Initialize the destinationFolder
         // String homeDir = System.getProperty("user.home");
         // destinationFolder = new File(homeDir, "Senior Project");
-        destinationFolder = new File("C:/Users/senoj/OneDrive/Desktop/Senior Project/Senior Project/");
+        destinationFolder = new File("c:/Users/senoj/OneDrive/Desktop/New Senior Project");
 
         // Add File button functionality
         JButton addButton = new JButton("Add File");
@@ -188,7 +188,7 @@ public class FileViewer extends JFrame {
                                 } else {
                                     // Image selection failed, show error message
                                     JOptionPane.showMessageDialog(FileViewer.this,
-                                            "Image selection failed. Please try again.", "Authentication Failed",
+                                            "Image selection failed.", "Authentication Failed",
                                             JOptionPane.ERROR_MESSAGE);
                                 }
                             }
@@ -219,31 +219,16 @@ public class FileViewer extends JFrame {
     private int showImageSelectionDialog() {
         // Load the 4 images from a predefined location
         ImageIcon[] images = new ImageIcon[4];
-        images[0] = new ImageIcon("CoverPhoto.png");
-        images[1] = new ImageIcon("GolfPhoto.png");
-        images[2] = new ImageIcon("KidPhoto.png");
-        images[3] = new ImageIcon("PlanePhoto.png");
+        images[0] = new ImageIcon("CoverPhoto.png"); // 'a'
+        images[1] = new ImageIcon("GolfPhoto.png"); // 'b'
+        images[2] = new ImageIcon("KidPhoto.png"); // 'c'
+        images[3] = new ImageIcon("PlanePhoto.png"); // 'd'
 
         // Create a panel to display the images
         JPanel imagePanel = new JPanel(new GridLayout(2, 2, 10, 10));
         for (int i = 0; i < images.length; i++) {
-            int index = i;
             JLabel label = new JLabel(images[i]);
             label.setPreferredSize(new Dimension(250, 250));
-            label.addMouseListener(new MouseAdapter() {
-                @Override
-                public void mouseClicked(MouseEvent e) {
-                    if (index == 0) {
-                        // Authentication successful, continue with the rest of the application
-                        return;
-                    } else {
-                        // Display error message and do not continue
-                        JOptionPane.showMessageDialog(FileViewer.this,
-                                "Incorrect photo selected.",
-                                "Authentication Failed", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            });
             imagePanel.add(label);
         }
 
@@ -254,19 +239,31 @@ public class FileViewer extends JFrame {
         if (result == JOptionPane.CLOSED_OPTION) {
             // Exit the application
             System.exit(0);
-        } else if (result == 0) { // CoverPhoto.png was selected
-            // Authentication successful, continue with the rest of the application
-            return JOptionPane.CLOSED_OPTION;
         } else if (result == JOptionPane.OK_OPTION) { // OK button was clicked
-            // Close the dialog but do not allow the user to proceed
-            return JOptionPane.OK_OPTION;
-        } else {
-            JOptionPane.showMessageDialog(FileViewer.this, "Wrong image selected. Please try again.",
-                    "Authentication Failed", JOptionPane.ERROR_MESSAGE);
-            // Do not continue, stay on the image selection dialog
+            // Prompt the user to enter the letter corresponding to the correct image
+            String input = JOptionPane.showInputDialog(FileViewer.this,
+                    "Enter the letter to the correct image:");
+
+            if (input != null && input.length() == 1) {
+                char letter = Character.toLowerCase(input.charAt(0));
+                if (letter == 'b') {
+                    // Authentication successful, continue with the rest of the application
+                    return JOptionPane.CLOSED_OPTION;
+                } else {
+                    JOptionPane.showMessageDialog(FileViewer.this, "Wrong letter entered.",
+                            "Authentication Failed", JOptionPane.ERROR_MESSAGE);
+                    // Exit the application
+                    System.exit(0);
+                }
+            } else {
+                JOptionPane.showMessageDialog(FileViewer.this, "Invalid input.",
+                        "Authentication Failed", JOptionPane.ERROR_MESSAGE);
+                // Exit the application
+                System.exit(0);
+            }
         }
 
-        return result; // Return the result of the showOptionDialog
+        return result;
     }
 
     // Method to add a file to the panel
