@@ -28,6 +28,7 @@ public class FileViewer extends JFrame {
     private JScrollPane scrollPane;
     private File destinationFolder;
     private PassValidation passValidation;
+    private boolean coverPhotoClicked = false;
 
     // Constructor for FileViewer class
     public FileViewer() {
@@ -178,8 +179,18 @@ public class FileViewer extends JFrame {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             if (PassEnc.toHexString(PassEnc.getSHA(inputPassword + "abcdefghij")).equals(line.trim())) {
-                                authenticated = true;
-                                break;
+                                // Password authentication successful, now prompt for image selection
+                                int imageIndex = showImageSelectionDialog();
+                                if (imageIndex == JOptionPane.CLOSED_OPTION) {
+                                    // Image selection successful, set authenticated to true
+                                    authenticated = true;
+                                    break;
+                                } else {
+                                    // Image selection failed, show error message
+                                    JOptionPane.showMessageDialog(FileViewer.this,
+                                            "Image selection failed. Please try again.", "Authentication Failed",
+                                            JOptionPane.ERROR_MESSAGE);
+                                }
                             }
                         }
                         reader.close();
@@ -202,6 +213,60 @@ public class FileViewer extends JFrame {
             }
         }
         return authenticated;
+    }
+
+    // Method to allow picture authentication
+    private int showImageSelectionDialog() {
+        // Load the 4 images from a predefined location
+        ImageIcon[] images = new ImageIcon[4];
+        images[0] = new ImageIcon("CoverPhoto.png");
+        images[1] = new ImageIcon("GolfPhoto.png");
+        images[2] = new ImageIcon("KidPhoto.png");
+        images[3] = new ImageIcon("PlanePhoto.png");
+
+        // Create a panel to display the images
+        JPanel imagePanel = new JPanel(new GridLayout(2, 2, 10, 10));
+        for (int i = 0; i < images.length; i++) {
+            int index = i;
+            JLabel label = new JLabel(images[i]);
+            label.setPreferredSize(new Dimension(250, 250));
+            label.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    if (index == 0) {
+                        // Authentication successful, continue with the rest of the application
+                        return;
+                    } else {
+                        // Display error message and do not continue
+                        JOptionPane.showMessageDialog(FileViewer.this,
+                                "Incorrect photo selected.",
+                                "Authentication Failed", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            });
+            imagePanel.add(label);
+        }
+
+        int result = JOptionPane.showOptionDialog(FileViewer.this, imagePanel, "Select an image",
+                JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
+
+        // Check if the user clicked the X button to close the dialog
+        if (result == JOptionPane.CLOSED_OPTION) {
+            // Exit the application
+            System.exit(0);
+        } else if (result == 0) { // CoverPhoto.png was selected
+            // Authentication successful, continue with the rest of the application
+            return JOptionPane.CLOSED_OPTION;
+        } else if (result == JOptionPane.OK_OPTION) { // OK button was clicked
+            // Close the dialog but do not allow the user to proceed
+            return JOptionPane.OK_OPTION;
+        } else {
+            JOptionPane.showMessageDialog(FileViewer.this, "Wrong image selected. Please try again.",
+                    "Authentication Failed", JOptionPane.ERROR_MESSAGE);
+            // Do not continue, stay on the image selection dialog
+        }
+
+        return result; // Return the result of the showOptionDialog
     }
 
     // Method to add a file to the panel
