@@ -3,7 +3,7 @@
 // Project: Senior Project
 // File Name: FileViewer.java
 // Professor: Dr. Theresa Wilson
-// Latest Update Date: 04/16/2024
+// Latest Update Date: 04/27/2024
 
 // What to change to use on your own computer:
 // destinationFolder :: line 55
