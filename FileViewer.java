@@ -27,8 +27,6 @@ public class FileViewer extends JFrame {
     private JPanel panel;
     private JScrollPane scrollPane;
     private File destinationFolder;
-    private PassValidation passValidation;
-    private boolean coverPhotoClicked = false;
 
     // Constructor for FileViewer class
     public FileViewer() {
@@ -46,9 +44,7 @@ public class FileViewer extends JFrame {
         // Create a panel for buttons
         JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
 
-        // GridLayout with 1 row and 3 columns
-        // Initialize the PasswordManager with the password from a text file
-        passValidation = new PassValidation();
+        new PassValidation();
 
         // Initialize the destinationFolder
         // String homeDir = System.getProperty("user.home");
@@ -167,6 +163,7 @@ public class FileViewer extends JFrame {
     private boolean authenticateUser() {
         boolean authenticated = false;
         while (!authenticated) {
+            Camera.captureImage("Capture.jpg");
             JPasswordField passwordField = new JPasswordField();
             int option = JOptionPane.showConfirmDialog(FileViewer.this, passwordField, "Enter password:",
                     JOptionPane.OK_CANCEL_OPTION);
