@@ -3,10 +3,10 @@
 // Project: Senior Project
 // File Name: FileViewer.java
 // Professor: Dr. Theresa Wilson
-// Latest Update Date: 04/27/2024
+// Latest Update Date: 04/28/2024
 
 // What to change to use on your own computer:
-// destinationFolder :: line 55
+// destinationFolder :: line 52
 
 import javax.swing.*;
 import java.awt.*;
@@ -229,32 +229,42 @@ public class FileViewer extends JFrame {
             imagePanel.add(label);
         }
 
-        int result = JOptionPane.showOptionDialog(FileViewer.this, imagePanel, "Select an image",
+        // Create the input box
+        JPanel inputPanel = new JPanel(new FlowLayout());
+        JLabel inputLabel = new JLabel("Enter the letter to the correct image:");
+        JTextField inputField = new JTextField(1);
+        inputPanel.add(inputLabel);
+        inputPanel.add(inputField);
+
+        // Create the main panel with the image panel and input panel
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainPanel.add(imagePanel, BorderLayout.CENTER);
+        mainPanel.add(inputPanel, BorderLayout.SOUTH);
+
+        int result = JOptionPane.showOptionDialog(FileViewer.this, mainPanel, "Select an image",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.PLAIN_MESSAGE, null, null, null);
 
         // Check if the user clicked the X button to close the dialog
         if (result == JOptionPane.CLOSED_OPTION) {
             // Exit the application
             System.exit(0);
-        } else if (result == JOptionPane.OK_OPTION) { // OK button was clicked
-            // Prompt the user to enter the letter corresponding to the correct image
-            String input = JOptionPane.showInputDialog(FileViewer.this,
-                    "Enter the letter to the correct image:");
-
+        } else if (result == JOptionPane.OK_OPTION) {
+            // OK button was clicked
+            String input = inputField.getText();
             if (input != null && input.length() == 1) {
                 char letter = Character.toLowerCase(input.charAt(0));
                 if (letter == 'b') {
                     // Authentication successful, continue with the rest of the application
                     return JOptionPane.CLOSED_OPTION;
                 } else {
-                    JOptionPane.showMessageDialog(FileViewer.this, "Wrong letter entered.",
-                            "Authentication Failed", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(FileViewer.this, "Wrong letter entered.", "Authentication Failed",
+                            JOptionPane.ERROR_MESSAGE);
                     // Exit the application
                     System.exit(0);
                 }
             } else {
-                JOptionPane.showMessageDialog(FileViewer.this, "Invalid input.",
-                        "Authentication Failed", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(FileViewer.this, "Invalid input.", "Authentication Failed",
+                        JOptionPane.ERROR_MESSAGE);
                 // Exit the application
                 System.exit(0);
             }
